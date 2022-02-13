@@ -246,7 +246,7 @@ Tambien podemos apreciarlo de forma visual con una gráfica RIN, con la cual pod
 with(colData(rse_gene), plot(assigned_gene_prop, sra_attribute.rin))
 abline(v=0.3, col = "red", lwd=2, lty=2)
 ```
-![RIN plot](../plots/rin_plot)
+![RIN plot](../plots/rin_plot.png)
 
 ## Limpieza de datos
 
@@ -265,7 +265,7 @@ Graficamos los datos en un histograma para visualizar nuevamente la distribucion
 hist(rse_gene$assigned_gene_prop, col = cm.colors(7), main='Histograma de la expresion genica de rse_gene_SRP115956', xlab='Expresion', ylab='Frecuencia')
 abline(v=0.3, col = "red", lwd=2, lty=2)
 ```
-![Histograma de la distribucion de las muestras](../plots/histograma_1)
+![Histograma de la distribucion de las muestras](../plots/histograma_1.png)
 
 Luego de analizar las graficas considere eliminar las muestras que se encuentran por debajo de un umbral de 0.3, de esta manera se eliminan algunos datos de mala calidad, y tambien se evita la perdida excesiva de datos. El resultado luego del cutoff puede graficarse nuevamente en un histograma. 
 
@@ -276,7 +276,7 @@ rse_gene <- rse_gene[, rse_gene$assigned_gene_prop > 0.3]
 hist(rse_gene$assigned_gene_prop, col = colorRampPalette(c('yellow', 'red'))(15), main='Histograma de la expresion genica de rse_gene_SRP115956 con cutoff', xlab='Expresion', ylab='Frecuencia')
 abline(v = 0.3, col="red", lwd=2, lty=2)
 ```
-![Histograma de la distribucion de las muestras despues del cutoff](../plots/histograma_2)
+![Histograma de la distribucion de las muestras despues del cutoff](../plots/histograma_2.png)
 
 Ahora se limpiaran los datos, eliminando genes con bajos niveles de expresion, que van por debajo del primer cuartil. 
 
@@ -340,7 +340,7 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = sra_a
     ylab("Proporción génica") +
     xlab("Fenotipo")
 ```
-![Boxplot de expresion diferencial entre el control y MDD](../plots/boxplot_fenotipo)
+![Boxplot de expresion diferencial entre el control y MDD](../plots/boxplot_fenotipo.png)
 
 ```{r}
 # Visualización de expresión por medio de boxplot de las condiciones female y male
@@ -350,7 +350,7 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = sra_a
     ylab("Proporción génica") +
     xlab("Genero")
 ```
-![Boxplot de expresion diferencial entre el genero de los individuos](../plots/boxplot_genero)
+![Boxplot de expresion diferencial entre el genero de los individuos](../plots/boxplot_genero.png)
 
 ```{r}    
 # Visualización de expresión por medio de boxplot de las causas de muerte
@@ -360,7 +360,7 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = Cause
     ylab("Proporción génica") +
     xlab("Causa de muerte")
 ```
-![Boxplot de expresion diferencial entre las causas de muerte](../plots/boxplot_muerte)
+![Boxplot de expresion diferencial entre las causas de muerte](../plots/boxplot_muerte.png)
 
 
 ### Modelo estadistico
@@ -395,7 +395,7 @@ El siguiente codigo genera una grafica que ilustra el promedio de la varianza en
 library("limma")
 vGene <- voom(dge, mod, plot = TRUE)
 ```
-![Desviacion estandar de los datos](../plots/voom_1)
+![Desviacion estandar de los datos](../plots/voom_1.png)
 
 Vemos que es necesario generar un modelo de regresión lineal para ajustar la expresión de los datos. Tambien se muestra la cantidad de genes que poseen una expresion significativa.  
 
@@ -420,14 +420,14 @@ La siguiente gráfica explica el cambio de expresión entre el control y pacient
 # Visualizar los resultados estadísticos
 plotMA(eb_results, coef = 2)
 ```
-![Cambio de expresion del control y pacientes con MDD](../plots/plotMA)
+![Cambio de expresion del control y pacientes con MDD](../plots/plotMA.png)
 
 El gráfico de volcano siguiente ilustra el logfold change en el eje x y el p-value en el eje y. Esto permite observar los genes con mayor expresión y con mejor valor de p-value. Los 3 genes con mayor expresión se resaltan en azul.
 
 ```{r}
 volcanoplot(eb_results, coef = 2, highlight = 3, names = de_results$gene_name)
 ```
-![Genes con mayor expresion y mejor p-value](../plots/volcano_plot)
+![Genes con mayor expresion y mejor p-value](../plots/volcano_plot.png)
 
 El el siguiente heatmap podemos observar la expresión de los 50 genes mas significativos con las condiciones que se analizaron en el modelo. 
 
@@ -457,7 +457,7 @@ pheatmap(
     fontsize_row = 6,
 )
 ```
-![Expresion de los 50 genes mas significativos](../plots/heatmap)
+![Expresion de los 50 genes mas significativos](../plots/heatmap.png)
 
 En los siguientes graficos se observa la formacion de clusters para cada variable de interes. Se ve que entre mujeres y hombres existe diferencia de genes diferencialmente expresados. Sin embargo, esto no ocurre en el caso de individuos con y sin MDD, y entre individuos que cometieron suicidio y los que no, por lo que se concluye que no hay suficientes genes diferencialmente expresados como para observar clusters. 
 
@@ -474,7 +474,7 @@ col.gender <- as.character(col.gender)
 ## MDS por genero
 plotMDS(vGene$E, labels = df$Gender, col = col.gender)
 ```
-![Clustering por genero](../plots/plot_mds_cluster_por_genero)
+![Clustering por genero](../plots/plot_mds_cluster_por_genero.png)
 
 ```{r}
 ## Convirtiendo los valores de MDD a colores
@@ -486,7 +486,7 @@ col.phenotype <- as.character(col.phenotype)
 ## MDS por fenotipo
 plotMDS(vGene$E, labels = df$Phenotype, col = col.phenotype)
 ```
-![Clustering por fenotipo](../plots/plot_mds_cluster_por_fenotipo)
+![Clustering por fenotipo](../plots/plot_mds_cluster_por_fenotipo.png)
 
 ```{r}
 ## Conviertiendo los valores de Cause of death a colores
@@ -498,5 +498,5 @@ col.death <- as.character(col.death)
 ## MDS por Cause of death
 plotMDS(vGene$E, labels = df$`Cause of death`, col = col.death)
 ```
-![Clustering por causa de muerte](../plots/plot_mds_cluster_por_muerte)
+![Clustering por causa de muerte](../plots/plot_mds_cluster_por_muerte.png)
 
