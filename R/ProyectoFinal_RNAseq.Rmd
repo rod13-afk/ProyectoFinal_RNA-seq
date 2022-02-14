@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     df_print: paged
-    code_folding: hide
+    code_folding: show
     self_contained: yes
     fig_caption: yes
     highlight: zenburn
@@ -28,7 +28,7 @@ Para comenzar con el proyecto, se realizo una búsqueda en el paquete recount3 d
 Major depressive disorder (MDD) is a leading cause of disease burden worldwide. While the incidence, symptoms and treatment of MDD all point toward major sex differences, the molecular mechanisms underlying this sexual dimorphism remain largely unknown. Methods: Here, combining differential expression and gene coexpression network analyses, we provide a comprehensive characterization of male and female transcriptional profiles associated with MDD across 6 brain regions. We overlap our human profiles with those from a mouse model of chronic variable stress and capitalize on converging pathways to define molecular and physiological mechanisms underlying the expression of stress susceptibility in males and females. Results: Our results show a major rearrangement of transcriptional patterns in MDD, with limited overlap between males and females, an effect seen in depressed humans and in stressed mice. We identify key regulators of sex-specific gene networks underlying MDD and confirm their sex-specific impact as mediators of stress susceptibility. For example, downregulation of the female-specific hub gene DUSP6 in prefrontal cortex mimics stress susceptibility in females only by increasing ERK signaling and pyramidal neuron excitability. Such DUSP6 downregulation also recapitulates the transcriptional remodeling that occurs in PFC of depressed females. Conclusions: Together, our findings reveal dramatic sexual dimorphism at the transcriptional level in MDD and highlight the importance of studying sex-specific treatments for this disorder. Overall design: RNA sequencing data from (1) 6 human postmortem brain regions in males and females with and without major depression and (2) 2 epuivalent brain regions in males and female mice with and without 21 days of chronic varibale stress (CVS). Note: The raw data for Samples GSM2740709-GSM2740726, GSM2740805, and GSM2740808 were updated in January 2018. The processed data have not changed.
 
 
-## Importacion de los datos 
+## 2. Importacion de los datos 
 
 ```{r}
 # Cargando el paquete recount3
@@ -46,20 +46,6 @@ rse_gene
 
 ```
 
-```{r}
-## class: RangedSummarizedExperiment 
-## dim: 63856 263 
-## metadata(8): time_created recount3_version ... annotation
-##   recount3_url
-## assays(1): raw_counts
-## rownames(63856): ENSG00000278704.1 ENSG00000277400.1 ...
-##   ENSG00000182484.15_PAR_Y ENSG00000227159.8_PAR_Y
-## rowData names(10): source type ... havana_gene tag
-## colnames(263): SRR5961814 SRR5961815 ... SRR5961998 SRR5961999
-## colData names(175): rail_id external_id ...
-##   recount_pred.curated.cell_line BigWigURL
-```
-
 Como se puede apreciar en las dimensiones, los datos estan se componen de 63,856 genes y 263 muestras. El objeto es analizado con el fin de conocer las categoría que contiene, y evaluar la homogeneidad de las mismas. Si existe algún problema tendrá que ser arreglado por medio de la curación o limpieza de los datos. Se utiliza el siguiente código para tambien explorar la información de las categorias, que representan variables del experimento.
 
 ```{r}
@@ -74,101 +60,6 @@ colData(rse_gene)[,
     grepl("^sra_attribute", colnames(colData(rse_gene)))]
 ```
     
-```{r}
-## DataFrame with 263 rows and 15 columns
-##            sra_attribute.age sra_attribute.alcool
-##                  <character>          <character>
-## SRR5961814                44                   NA
-## SRR5961815                29                   no
-## SRR5961816                68                  yes
-## SRR5961817                39                   no
-## SRR5961818                40                   NA
-## ...                      ...                  ...
-## SRR5961995                53                   no
-## SRR5961996                39                   no
-## SRR5961997                55                  yes
-## SRR5961998                38                   NA
-## SRR5961999                25                   NA
-##            sra_attribute.Cause_of_death sra_attribute.drug_type
-##                             <character>             <character>
-## SRR5961814                      Suicide                      NA
-## SRR5961815                      Suicide                      no
-## SRR5961816                      Suicide                      no
-## SRR5961817                      Suicide                      no
-## SRR5961818                      Suicide                      NA
-## ...                                 ...                     ...
-## SRR5961995                      Suicide                      no
-## SRR5961996                      Suicide                      no
-## SRR5961997                     Accident                      no
-## SRR5961998                      Suicide                      NA
-## SRR5961999                      Suicide                      NA
-##            sra_attribute.drugs sra_attribute.gender
-##                    <character>          <character>
-## SRR5961814                  NA               female
-## SRR5961815                  no                 male
-## SRR5961816                  no                 male
-## SRR5961817                  no                 male
-## SRR5961818                  NA               female
-## ...                        ...                  ...
-## SRR5961995                  no                 male
-## SRR5961996                  no                 male
-## SRR5961997                  no                 male
-## SRR5961998                  NA                 male
-## SRR5961999                  NA               female
-##            sra_attribute.medication_type sra_attribute.medication
-##                              <character>              <character>
-## SRR5961814                            AD                      yes
-## SRR5961815                            no                       no
-## SRR5961816                            NA                       NA
-## SRR5961817                            AD                      yes
-## SRR5961818                            AD                      yes
-## ...                                  ...                      ...
-## SRR5961995                            NA                       NA
-## SRR5961996                            AD                      yes
-## SRR5961997                            no                       no
-## SRR5961998                            NA                       NA
-## SRR5961999                            NA                       NA
-##            sra_attribute.ph sra_attribute.phenotype sra_attribute.pmi
-##                 <character>             <character>       <character>
-## SRR5961814             6.73                    CTRL              29.5
-## SRR5961815             6.96                     MDD                27
-## SRR5961816             6.93                     MDD                32
-## SRR5961817             6.37                     MDD              18.5
-## SRR5961818             6.81                     MDD              49.5
-## ...                     ...                     ...               ...
-## SRR5961995             6.91                     MDD              33.5
-## SRR5961996                6                     MDD                19
-## SRR5961997             6.75                    CTRL                24
-## SRR5961998             6.86                     MDD                30
-## SRR5961999             6.73                     MDD                20
-##            sra_attribute.rin sra_attribute.smoking
-##                  <character>           <character>
-## SRR5961814               7.3                    NA
-## SRR5961815               5.7           yes (heavy)
-## SRR5961816               8.8           yes (heavy)
-## SRR5961817               6.8                    no
-## SRR5961818               7.8                    NA
-## ...                      ...                   ...
-## SRR5961995               7.7                    NA
-## SRR5961996               4.9           yes (heavy)
-## SRR5961997               4.4                    NA
-## SRR5961998               7.7                    NA
-## SRR5961999               8.1                    NA
-##            sra_attribute.source_name   sra_attribute.tissue
-##                          <character>            <character>
-## SRR5961814          postmortem brain Orbitofrontal (OFC; ..
-## SRR5961815          postmortem brain Orbitofrontal (OFC; ..
-## SRR5961816          postmortem brain Orbitofrontal (OFC; ..
-## SRR5961817          postmortem brain Orbitofrontal (OFC; ..
-## SRR5961818          postmortem brain Orbitofrontal (OFC; ..
-## ...                              ...                    ...
-## SRR5961995          postmortem brain Nucleus Accumbens (N..
-## SRR5961996          postmortem brain Nucleus Accumbens (N..
-## SRR5961997          postmortem brain Nucleus Accumbens (N..
-## SRR5961998          postmortem brain Nucleus Accumbens (N..
-## SRR5961999          postmortem brain Nucleus Accumbens (N..
-```
-
 Para el análisis de expresión diferencial, se utilizarán las variables del fenotipo, en este caso se cuenta con individuos que presentaban el MDD o no. La siguiente variable a analizar es el género de los individuos, ya que en el estudio se encontraron, diferencias significativas entre hombres y mujeres. Finalmente, la causa de muerte, pues algunos de los individuos cometieron suicidio, lo cual podría relacionarse con el transtorno.
 
 Estas variables, junto con las variables numéricas de edad y el número de integridad del RNA (RIN), se formatean como se muestra en el siguiente código para que puedan utilizarse en el resto del analisis.
@@ -185,45 +76,12 @@ summary(as.data.frame(colData(rse_gene)[,
     grepl("^sra_attribute.[phenotype|gender|age|rin]", colnames(colData(rse_gene)))]))
 ```
 
-```{r}
-##sra_attribute.age sra_attribute.alcool sra_attribute.drug_type
-## Min.   :19.00     Length:263           Length:263             
-## 1st Qu.:38.00     Class :character     Class :character       
-## Median :46.00     Mode  :character     Mode  :character       
-## Mean   :46.63                                                 
-## 3rd Qu.:55.00                                                 
-## Max.   :82.00                                                 
-## sra_attribute.drugs sra_attribute.gender sra_attribute.ph  
-## Length:263          female:122           Length:263        
-## Class :character    male  :141           Class :character  
-## Mode  :character                         Mode  :character  
-##                                                            
-##                                                            
-##                                                            
-## sra_attribute.phenotype sra_attribute.pmi  sra_attribute.rin
-## CTRL:122                Length:263         Min.   :4.300    
-## MDD :141                Class :character   1st Qu.:6.400    
-##                         Mode  :character   Median :7.300    
-##                                            Mean   :7.108    
-##                                            3rd Qu.:7.700    
-##                                            Max.   :9.400    
-## sra_attribute.tissue
-## Length:263          
-## Class :character    
-## Mode  :character 
-```
-
 La mayoria de las variables de interes contiene dos condiciones, lo cual facilita pasos del analisis, como la creacion del modelo estadistico, sin embargo la causa de muerte posee mas de dos condiciones distintas. Para poder solucionarlo se consideraron solo dos causas de muerte: por suicidio y no suicidio, esto se genera con el siguiente codigo.
 
 ```{r}
 # Creacion de la variable
 rse_gene$Cause_of_death <- factor(ifelse(rse_gene$sra_attribute.Cause_of_death == "Suicide", "suicide", "no suicide"))
 table(rse_gene$Cause_of_death)
-```
-
-```{r}
-## no suicide    suicide 
-##         60        203 
 ```
 
 Ahora se calcula la proporción de lecturas asignadas a los genes, lo cual facilita la identificación de muestras malas en el siguiente paso.
@@ -234,11 +92,6 @@ rse_gene$assigned_gene_prop <- rse_gene$recount_qc.gene_fc_count_all.assigned / 
 summary(rse_gene$assigned_gene_prop)
 ```
 
-```{r}
-##   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 0.2915  0.3704  0.3985  0.4060  0.4329  0.5841  
-```
-
 Tambien podemos apreciarlo de forma visual con una gráfica RIN, con la cual podemos decidir si necesitamos limpiar los datos.
 
 ```{r}
@@ -246,9 +99,8 @@ Tambien podemos apreciarlo de forma visual con una gráfica RIN, con la cual pod
 with(colData(rse_gene), plot(assigned_gene_prop, sra_attribute.rin))
 abline(v=0.3, col = "red", lwd=2, lty=2)
 ```
-![RIN plot](../plots/rin_plot.png)
 
-## Limpieza de datos
+## 3. Limpieza de datos
 
 Primero hacemos una copia de seguridad del objeto que contiene los datos.
 
@@ -265,7 +117,6 @@ Graficamos los datos en un histograma para visualizar nuevamente la distribucion
 hist(rse_gene$assigned_gene_prop, col = cm.colors(7), main='Histograma de la expresion genica de rse_gene_SRP115956', xlab='Expresion', ylab='Frecuencia')
 abline(v=0.3, col = "red", lwd=2, lty=2)
 ```
-![Histograma de la distribucion de las muestras](../plots/histograma_1.png)
 
 Luego de analizar las graficas considere eliminar las muestras que se encuentran por debajo de un umbral de 0.3, de esta manera se eliminan algunos datos de mala calidad, y tambien se evita la perdida excesiva de datos. El resultado luego del cutoff puede graficarse nuevamente en un histograma. 
 
@@ -276,7 +127,6 @@ rse_gene <- rse_gene[, rse_gene$assigned_gene_prop > 0.3]
 hist(rse_gene$assigned_gene_prop, col = colorRampPalette(c('yellow', 'red'))(15), main='Histograma de la expresion genica de rse_gene_SRP115956 con cutoff', xlab='Expresion', ylab='Frecuencia')
 abline(v = 0.3, col="red", lwd=2, lty=2)
 ```
-![Histograma de la distribucion de las muestras despues del cutoff](../plots/histograma_2.png)
 
 Ahora se limpiaran los datos, eliminando genes con bajos niveles de expresion, que van por debajo del primer cuartil. 
 
@@ -284,9 +134,6 @@ Ahora se limpiaran los datos, eliminando genes con bajos niveles de expresion, q
 # Se calculan los niveles medios de expresión de los genes en las muestras
 gene_means <- rowMeans(assay(rse_gene, "counts"))
 summary(gene_means)
-
-##    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-##     0.0      0.2      3.6    390.6     74.8 827777.9 
 
 # Eliminar genes con menor a 0.2
 rse_gene <- rse_gene[gene_means > 0.2, ]
@@ -297,20 +144,17 @@ Finalmente se comparan las dimensiones de los objetos previo al filtrado y despu
 ```{r}
 # Comparar dimensiones finales
 dim(rse_gene)
-# [1] 49610   261
 
 dim(rse_gene_unfiltered)
-# [1] 63856   263 
 ```
+
 ```{r}
 # Obtener el porcentaje de información conservada después de la limpieza
 round(nrow(rse_gene) / nrow(rse_gene_unfiltered) * 100, 2)
-
-# [1] 77.69
 ```
 
 
-## Normalizacion de los datos 
+## 4. Normalizacion de los datos 
 
 La normalizacion de los datos es un paso necesario en el analisis, ya que al hacerlo se busca redudir la incidencia de falsos positivos. 
 
@@ -324,8 +168,7 @@ dge <- DGEList(
 dge <- calcNormFactors(dge)
 ```
 
-
-## EXPRESION DIFERENCIAL
+## 5. Expresion diferencial
 
 En este ultimo paso del analisis, se generaron gráficas boxplot, con el objetivo de visualizar la diferencia entre la expresión de las muestras bajo distintas condiciones. Aqui se analizan las diferencias de expresión entre las condiciones de las variables de interes: fenotipo, genero y causa de muerte. De forma grafica se puede ver que en los 3 casos se tiene poca diferencia entre la expresión. 
 
@@ -340,7 +183,6 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = sra_a
     ylab("Proporción génica") +
     xlab("Fenotipo")
 ```
-![Boxplot de expresion diferencial entre el control y MDD](../plots/boxplot_fenotipo.png)
 
 ```{r}
 # Visualización de expresión por medio de boxplot de las condiciones female y male
@@ -350,7 +192,6 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = sra_a
     ylab("Proporción génica") +
     xlab("Genero")
 ```
-![Boxplot de expresion diferencial entre el genero de los individuos](../plots/boxplot_genero.png)
 
 ```{r}    
 # Visualización de expresión por medio de boxplot de las causas de muerte
@@ -360,10 +201,8 @@ ggplot(as.data.frame(colData(rse_gene)), aes(y = assigned_gene_prop, col = Cause
     ylab("Proporción génica") +
     xlab("Causa de muerte")
 ```
-![Boxplot de expresion diferencial entre las causas de muerte](../plots/boxplot_muerte.png)
 
-
-### Modelo estadistico
+### 5.1. Modelo estadistico
 
 Se usará model.matrix() para modelar las variables para el análisis de expresión diferencial. Ademas, confirma que las dimensiones de los objetos dge y mod coincidan en renglones y columnas respectivamente, ya que esto es un requisito para  
 
@@ -374,18 +213,12 @@ mod <- model.matrix(~ sra_attribute.phenotype + sra_attribute.gender + Cause_of_
 
 # Observar las variables que componen el modelo
 colnames(mod)
-
-## [1] "(Intercept)"                "sra_attribute.phenotypeMDD"
-## [3] "sra_attribute.gendermale"   "Cause_of_deathsuicide"     
-## [5] "assigned_gene_prop"
 ```
 
 ```{r}
 dim(dge)
-## [1] 49610   261
 
 dim(mod)
-## [1] 261   5
 ```
 
 El siguiente codigo genera una grafica que ilustra el promedio de la varianza en la expresión diferencial de los datos. 
@@ -395,7 +228,6 @@ El siguiente codigo genera una grafica que ilustra el promedio de la varianza en
 library("limma")
 vGene <- voom(dge, mod, plot = TRUE)
 ```
-![Desviacion estandar de los datos](../plots/voom_1.png)
 
 Vemos que es necesario generar un modelo de regresión lineal para ajustar la expresión de los datos. Tambien se muestra la cantidad de genes que poseen una expresion significativa.  
 
@@ -410,6 +242,7 @@ de_results <- topTable(
     number = nrow(rse_gene),
     sort.by = "none"
 )
+
 # Mostrar los genes diferencialmente expresados entre control y MDD con FDR < 5%
 table(de_results$adj.P.Val < 0.05)
 ```
@@ -420,14 +253,12 @@ La siguiente gráfica explica el cambio de expresión entre el control y pacient
 # Visualizar los resultados estadísticos
 plotMA(eb_results, coef = 2)
 ```
-![Cambio de expresion del control y pacientes con MDD](../plots/plotMA.png)
 
 El gráfico de volcano siguiente ilustra el logfold change en el eje x y el p-value en el eje y. Esto permite observar los genes con mayor expresión y con mejor valor de p-value. Los 3 genes con mayor expresión se resaltan en azul.
 
 ```{r}
 volcanoplot(eb_results, coef = 2, highlight = 3, names = de_results$gene_name)
 ```
-![Genes con mayor expresion y mejor p-value](../plots/volcano_plot.png)
 
 El el siguiente heatmap podemos observar la expresión de los 50 genes mas significativos con las condiciones que se analizaron en el modelo. 
 
@@ -457,7 +288,6 @@ pheatmap(
     fontsize_row = 6,
 )
 ```
-![Expresion de los 50 genes mas significativos](../plots/heatmap.png)
 
 En los siguientes graficos se observa la formacion de clusters para cada variable de interes. Se ve que entre mujeres y hombres existe diferencia de genes diferencialmente expresados. Sin embargo, esto no ocurre en el caso de individuos con y sin MDD, y entre individuos que cometieron suicidio y los que no, por lo que se concluye que no hay suficientes genes diferencialmente expresados como para observar clusters. 
 
@@ -471,32 +301,46 @@ levels(col.gender) <- brewer.pal(nlevels(col.gender), "Set1")
 
 col.gender <- as.character(col.gender)
 
-## MDS por genero
+# MDS por genero
 plotMDS(vGene$E, labels = df$Gender, col = col.gender)
 ```
-![Clustering por genero](../plots/plot_mds_cluster_por_genero.png)
 
 ```{r}
-## Convirtiendo los valores de MDD a colores
+# Convirtiendo los valores de MDD a colores
 col.phenotype <- df$Phenotype
 levels(col.phenotype) <- brewer.pal(nlevels(col.phenotype), "Dark2")
 
 col.phenotype <- as.character(col.phenotype)
 
-## MDS por fenotipo
+# MDS por fenotipo
 plotMDS(vGene$E, labels = df$Phenotype, col = col.phenotype)
 ```
-![Clustering por fenotipo](../plots/plot_mds_cluster_por_fenotipo.png)
 
 ```{r}
-## Conviertiendo los valores de Cause of death a colores
+# Conviertiendo los valores de Cause of death a colores
 col.death <- df$`Cause of death`
 levels(col.death) <- brewer.pal(nlevels(col.death), "Set1")
 
 col.death <- as.character(col.death)
 
-## MDS por Cause of death
+# MDS por Cause of death
 plotMDS(vGene$E, labels = df$`Cause of death`, col = col.death)
 ```
-![Clustering por causa de muerte](../plots/plot_mds_cluster_por_muerte.png)
 
+
+## 6. Conclusiones
+
+Es necesario mencionar algunas las conclusiones que surgieron en el transcurso del trabajo. Primero, reconocer que recount3 posee una gran cantidad de proyectos, todos con caracteristicas distintas, algunos de ellos presentaban problemas en algunas de las etapas del analisis y en ocasiones no tenian datos utiles como el valor RIN, o no contaban con una buena calidad de  bibliotecas de datos para un análisis de expresión diferencial  adecuado. 
+
+Ademas del analisis de los resultados obtenidos en este proyecto, creo que la conclusion a la que llego luego de realizarlo es que, a la hora de trabajar con datos, es necesario analizarlos constantemente, con el objetivo de encontrar posibles errores que puedan causar problemas en pasos posteriores en el analisis; asi mismo, ha sido una excelente oportunidad para realizar un analisis de expresion diferencial casi real.
+
+
+## 7. Referencias 
+
+[Leonardo Collado-Torres](http://lcolladotor.github.io/)
+
+Collado-Torres L (2021). Explore and download data from the recount3 project. doi: 10.18129/B9.bioc.recount3
+
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
+Neuwirth, E. (2014). “RColorBrewer: ColorBrewer Palettes.” CRAN-r-project, https://CRAN.R-project.org/package=RColorBrewer
